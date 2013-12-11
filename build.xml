@@ -9,7 +9,7 @@
 
 <project name="jcatalog" default="build.war" basedir=".">
 	<!-- Configure the context path for this application -->
-	<property name="project.name" value="catalog" />
+	<property name="project.name" value="catalog-1.0" />
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="src.java.dir" value="${src.dir}/java" />
@@ -34,22 +34,22 @@
 		</fileset>
 	</path>
 
-	<path id="javaclasspath">
+	<!--<path id="javaclasspath">
 		<fileset dir="${src.dir}">
 			<include name="**/*.java" />
 		</fileset>
-	</path>
+	</path>-->
 
-	<path id="classpath.base">
-		<pathelement location="C:\Program Files (x86)\Java\jdk1.7.0_25\lib\tools.jar" />
-	</path>
+	<!--<path id="classpath.base">
+		<pathelement location="${lib.dir}/tools.jar" />
+	</path>-->
 
 	<path id="classpath.test">
 		<pathelement location="${basedir}/lib/junit-4.10.jar" />
 		<pathelement location="${testdir}" />
-		<path refid="classpath.base" />
+		<!--<path refid="classpath.base" />-->
 		<path refid="classpath" />
-	    <path refid="javaclasspath" />
+	    
 	</path>
 
 	<path id="classpath.src">
@@ -86,7 +86,7 @@
 		<mkdir dir="${build.dir}/${project.name}/WEB-INF/classes" />
 		<mkdir dir="${build.dir}/${project.name}/WEB-INF/lib" />
 		<mkdir dir="${test.data.dir}" />
-		<mkdir dir="${test.htmlreports.dir}" />
+		<mkdir dir="${test.htmlreports.dir}" />			
 	</target>
 
 	<target name="deploy.copyJars">
@@ -102,6 +102,7 @@
 	<target name="build" depends="prepare,deploy.copyJars,test" description="Compile Java files and copy static files.">
 		<javac srcdir="${src.java.dir}" destdir="${build.dir}/${project.name}/WEB-INF/classes">
 			<include name="**/*.java" />
+			<classpath refid="classpath"/>
 		</javac>
 
 		<copy todir="${build.dir}/${project.name}/WEB-INF">
@@ -141,18 +142,18 @@
 	<target name="compile">
 		<javac srcdir="${src.dir}" destdir="${src.dir}" verbose="${full-compile}">
 			<classpath refid="classpath.test" />
-			<classpath refid="classpath.base" />
+			<!--<classpath refid="classpath.base" />-->
 		</javac>
 	</target>
 
 	<target name="compile-test">
 
-		<!--<mkdir dir="${classes.dir}" />-->
+	<mkdir dir="${classes.dir}" />
 
-		<!--<javac srcdir="${testdir}" classpathref="compile.classpath" destdir="${testdir}" debug="true" includes="${src.dir}" includeAntRuntime="false" />-->
+	<javac srcdir="${testdir}" classpathref="compile.classpath" destdir="${testdir}" debug="true" includes="${src.dir}" includeAntRuntime="false" />
 
 		<javac srcdir="${testdir}" destdir="${testdir}" debug="true" includes="${srcdir}" includeAntRuntime="false">
-			<classpath refid="classpath.base" />
+			<!--<classpath refid="classpath.base" />-->
 			<classpath refid="classpath.src" />
 			<classpath refid="classpath.test" />
 			<include name="**/*.java" />
@@ -166,16 +167,12 @@
 			<test name="${junit.class.name}" todir="${test.data.dir}" />
 			<formatter type="brief" usefile="false" />
 			<formatter type="xml" />
-			<classpath refid="classpath.base" />
+			<!--<classpath refid="classpath.base" />-->
 			<classpath refid="classpath.src" />
 			<classpath refid="classpath.test" />
 			<formatter type="brief" usefile="false" />
 			<!--<test name="TestMessageUtil" />-->
-			<!--<batchtest>
-				<fileset dir="${testdir}">
-					<include name="**/Test*.java" />
-				</fileset>
-			</batchtest>-->
+			
 		</junit>
 		<junitreport todir="${test.htmlreports.dir}">
 			<fileset dir="${test.data.dir}">
